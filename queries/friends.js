@@ -1,10 +1,37 @@
 const db = require("../db/dbConfig");
 
 // Retrieve all friend requests from the connection_requests table
-const getFriendRequests = async () => {
+const getSenderRequests = async (sender_user_profile_id) => {
   try {
     const showAllFriendConnection = await db.any(
-      "SELECT * FROM connection_requests"
+      "SELECT * FROM connection_requests WHERE sender_user_profile_id=$1",
+      sender_user_profile_id
+    );
+    return showAllFriendConnection;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+// Getting all the friend requests
+const getAllFriendReuests = async () => {
+  try {
+    const allFriendReqests = await db.any(
+      "SELECT * FROM friend_requests"
+    );
+    return allFriendReqests;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+const getReceiverRequests = async (sender_user_profile_id) => {
+  try {
+    const showAllFriendConnection = await db.any(
+      "SELECT * FROM connection_requests WHERE sender_user_profile_id=$1",
+      sender_user_profile_id
     );
     return showAllFriendConnection;
   } catch (error) {
@@ -48,18 +75,30 @@ const createFriends = async (request) => {
   }
 };
 // update a friend request
-const updateFriend = async (connectionrequests_id, sender_user_profile_id, receiver_user_profile_id, status, timestamp) => {
-    try {
-      const updatedFriend = await db.one(
-        "UPDATE connection_requests SET sender_user_profile_id=$1, receiver_user_profile_id=$2, status=$3, timestamp=$4 WHERE connectionrequests_id=$5 RETURNING *",
-        [sender_user_profile_id, receiver_user_profile_id, status, timestamp, connectionrequests_id]
-      );
-      return updatedFriend;
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  };
+const updateFriend = async (
+  connectionrequests_id,
+  sender_user_profile_id,
+  receiver_user_profile_id,
+  status,
+  timestamp
+) => {
+  try {
+    const updatedFriend = await db.one(
+      "UPDATE connection_requests SET sender_user_profile_id=$1, receiver_user_profile_id=$2, status=$3, timestamp=$4 WHERE connectionrequests_id=$5 RETURNING *",
+      [
+        sender_user_profile_id,
+        receiver_user_profile_id,
+        status,
+        timestamp,
+        connectionrequests_id,
+      ]
+    );
+    return updatedFriend;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 //delete a friend request
 const deleteFriendRequest = async (
   connectionrequests_id,
@@ -86,8 +125,9 @@ const deleteFriendRequest = async (
 };
 
 module.exports = {
+  getAllFriendReuests,
   createFriends,
-  getFriendRequests,
+  getFriendRequests: getSenderRequests,
   deleteFriendRequest,
   getSingleFriend,
   updateFriend,

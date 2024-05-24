@@ -56,18 +56,42 @@ VALUES
     (4, 4);
 
 
-INSERT INTO connection_requests
-    (sender_user_profile_id, receiver_user_profile_id, status, timestamp)
+-- INSERT INTO connection_requests
+--     (sender_user_profile_id, receiver_user_profile_id, status, timestamp)
+-- VALUES
+--     (1, 2, 'accepted', CURRENT_TIMESTAMP),
+--     (3, 1, 'pending', CURRENT_TIMESTAMP),
+--     (3, 4, 'accepted', CURRENT_TIMESTAMP),
+--     (4, 1, 'pending', CURRENT_TIMESTAMP),
+--     (4, 2, 'accepted', CURRENT_TIMESTAMP),
+--     (2, 3, 'accepted', CURRENT_TIMESTAMP),
+--     (6, 8, 'pending', CURRENT_TIMESTAMP),
+--     (7, 4, 'accepted', CURRENT_TIMESTAMP),
+--     (8, 10, 'pending', CURRENT_TIMESTAMP);
+
+INSERT INTO friend_requests 
+    (sender_id, recipient_id, status )
 VALUES
-    (1, 2, 'accepted', CURRENT_TIMESTAMP),
-    (3, 1, 'pending', CURRENT_TIMESTAMP),
-    (3, 4, 'accepted', CURRENT_TIMESTAMP),
-    (4, 1, 'pending', CURRENT_TIMESTAMP),
-    (4, 2, 'accepted', CURRENT_TIMESTAMP),
-    (2, 3, 'accepted', CURRENT_TIMESTAMP),
-    (6, 8, 'pending', CURRENT_TIMESTAMP),
-    (7, 4, 'accepted', CURRENT_TIMESTAMP),
-    (8, 10, 'pending', CURRENT_TIMESTAMP);
+    (1, 2, 'pending'),
+    (1, 3, 'accepted'),
+    (1, 7, 'accepted'),
+    (2, 3, 'rejected'),
+    (2, 5, 'pending'),
+    (3, 4, 'rejected'),
+    (3, 6, 'accepted'),
+    (6, 9, 'pending'),
+    (9, 1, 'rejected');
+
+INSERT INTO friends 
+    (user_id1, user_id2, friends_since)
+VALUES
+    (1, 3, CURRENT_TIMESTAMP),
+    -- (LEAST(1, 3), GREATEST(2, 3) ),
+    (1, 7, CURRENT_TIMESTAMP),
+    -- (LEAST(1, 7), GREATEST(1, 7) ),
+    (3, 6, CURRENT_TIMESTAMP);
+    -- (LEAST(3, 6), GREATEST(3, 6) ),
+    
     
 INSERT INTO posts (userprofile_id, post_description)
 VALUES

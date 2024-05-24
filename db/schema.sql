@@ -43,13 +43,32 @@ CREATE TABLE interest_connections
     interest_id INTEGER REFERENCES interests(interest_id)
 );
 
-CREATE TABLE connection_requests
-(
-    connectionrequests_id SERIAL PRIMARY KEY,
-    sender_user_profile_id INTEGER REFERENCES user_profiles(userprofile_id),
-    receiver_user_profile_id INTEGER REFERENCES user_profiles(userprofile_id),
-    status TEXT,
-    timestamp TIMESTAMP
+-- CREATE TABLE connection_requests
+-- (
+--     connectionrequests_id SERIAL PRIMARY KEY,
+--     sender_user_profile_id INTEGER REFERENCES user_profiles(userprofile_id),
+--     receiver_user_profile_id INTEGER REFERENCES user_profiles(userprofile_id),
+--     status TEXT,
+--     timestamp TIMESTAMP
+-- );
+
+CREATE TABLE friend_requests (
+    request_id SERIAL PRIMARY KEY,
+    sender_id INTEGER REFERENCES user_profiles(userprofile_id) ON DELETE CASCADE,
+    recipient_id INTEGER REFERENCES user_profiles(userprofile_id) ON DELETE CASCADE,
+    status VARCHAR(20) NOT NULL CHECK (status IN ('pending', 'accepted', 'rejected')),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (sender_id, recipient_id)
+);
+
+CREATE TABLE friends (
+    user_id1 INTEGER NOT NULL REFERENCES user_profiles(userprofile_id) ON DELETE CASCADE,
+    user_id2 INTEGER NOT NULL REFERENCES user_profiles(userprofile_id) ON DELETE CASCADE,
+    friends_since TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id1, user_id2),
+    CONSTRAINT check_user_order CHECK (user_id1 < user_id2),
+    CONSTRAINT unique_friendship UNIQUE (user_id1, user_id2)
 );
 
 CREATE TABLE posts (
